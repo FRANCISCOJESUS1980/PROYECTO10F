@@ -2,6 +2,13 @@ import RegisterForm from './RegisterForm.js'
 import LoginForm from './loginForm.js'
 import { Modal } from './Modal.js'
 
+const clearModals = () => {
+  const existingModal = document.querySelector('.modal')
+  if (existingModal) {
+    existingModal.remove()
+  }
+}
+
 const Header = (handleRegister, handleLogin) => {
   const headerElement = document.createElement('header')
   headerElement.style.position = 'fixed'
@@ -26,11 +33,13 @@ const Header = (handleRegister, handleLogin) => {
   `
 
   headerElement.querySelector('#registerBtn').onclick = () => {
+    clearModals()
     const modal = Modal(RegisterForm(handleRegister))
     document.body.appendChild(modal)
   }
 
   headerElement.querySelector('#loginBtn').onclick = () => {
+    clearModals()
     const modal = Modal(LoginForm(handleLogin))
     document.body.appendChild(modal)
   }

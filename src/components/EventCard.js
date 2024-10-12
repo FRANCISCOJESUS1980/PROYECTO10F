@@ -1,22 +1,31 @@
-const EventCard = (event, onConfirm, onLeave) => {
+const EventCard = (event, onConfirm, onLeave, isAuthenticated) => {
   const card = document.createElement('div')
   card.classList.add('event-card')
+
   card.innerHTML = `
-      <h3>${event.title}</h3>
-      <p>${event.description}</p>
-      <p>Fecha: ${new Date(event.date).toLocaleString()}</p>
-      <p>Ubicación: ${event.location}</p>
-      <img src="${event.imageUrl}" alt="${event.title}" />
-      <button id="confirm-${event._id}">Confirmar Asistencia</button>
-      <button id="leave-${event._id}">Salir</button>
+    <img src="${event.imageUrl}" alt="${event.title}" class="event-image" />
+    <h3 class="event-name">${event.title}</h3>
+    <p class="event-description">${event.description}</p>
+    <p class="event-date">Fecha: ${new Date(event.date).toLocaleString()}</p>
+    <p class="event-location">Ubicación: ${event.location}</p>
+    <div class="event-buttons">
+      <button class="confirm-btn" id="confirm-${event._id}" ${
+    !isAuthenticated ? 'disabled' : ''
+  }>Confirmar Asistencia</button>
+      <button class="leave-btn" id="leave-${event._id}" ${
+    !isAuthenticated ? 'disabled' : ''
+  }>Salir</button>
+    </div>
   `
 
-  card
-    .querySelector(`#confirm-${event._id}`)
-    .addEventListener('click', () => onConfirm(event._id))
-  card
-    .querySelector(`#leave-${event._id}`)
-    .addEventListener('click', () => onLeave(event._id))
+  if (isAuthenticated) {
+    card
+      .querySelector(`#confirm-${event._id}`)
+      .addEventListener('click', () => onConfirm(event._id))
+    card
+      .querySelector(`#leave-${event._id}`)
+      .addEventListener('click', () => onLeave(event._id))
+  }
 
   return card
 }

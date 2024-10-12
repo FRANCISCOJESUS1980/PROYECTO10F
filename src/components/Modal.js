@@ -15,16 +15,18 @@ export const Modal = (content) => {
   modalContent.style.backgroundColor = 'white'
   modalContent.style.padding = '20px'
   modalContent.style.borderRadius = '5px'
-  modalContent.innerHTML = `
-      <button id="closeModal">Cerrar</button>
-      ${content.outerHTML}
-  `
 
-  modal.appendChild(modalContent)
+  modalContent.appendChild(content)
 
-  modal.querySelector('#closeModal').onclick = () => {
+  const closeModalButton = document.createElement('button')
+  closeModalButton.id = 'closeModal'
+  closeModalButton.textContent = 'Cerrar'
+  closeModalButton.onclick = () => {
     modal.remove()
   }
+
+  modalContent.appendChild(closeModalButton)
+  modal.appendChild(modalContent)
 
   return modal
 }

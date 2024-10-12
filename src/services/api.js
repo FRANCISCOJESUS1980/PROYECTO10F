@@ -1,15 +1,32 @@
 const API_URL = 'http://localhost:3000/api'
 
+const isTokenExpired = (token) => {
+  const payload = JSON.parse(atob(token.split('.')[1]))
+  const now = Date.now() / 1000
+  return payload.exp < now
+}
+
 const api = async (endpoint, method = 'GET', body = null, token = null) => {
   const headers = {
     'Content-Type': 'application/json'
   }
 
   if (token) {
+    if (isTokenExpired(token)) {
+      localStorage.removeItem('token')
+      throw new Error(
+        'Token inválido o ha expirado. Por favor, inicia sesión de nuevo.'
+      )
+    }
     headers['Authorization'] = `Bearer ${token}`
   }
 
   try {
+    console.log(
+      `Realizando ${method} a ${API_URL}${endpoint} con cuerpo:`,
+      body
+    )
+
     const response = await fetch(`${API_URL}${endpoint}`, {
       method,
       headers,
@@ -18,6 +35,12 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
 
     if (!response.ok) {
       const errorData = await response.json()
+      if (response.status === 401) {
+        localStorage.removeItem('token')
+        throw new Error(
+          'Token inválido o ha expirado. Inicia sesión nuevamente.'
+        )
+      }
       throw new Error(errorData.message || response.statusText)
     }
 

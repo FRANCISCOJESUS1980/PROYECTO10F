@@ -3,7 +3,7 @@ import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
 
-let token = null
+let token = localStorage.getItem('token') || null
 const app = document.getElementById('app')
 
 const showLoading = () => {
@@ -12,49 +12,68 @@ const showLoading = () => {
   app.appendChild(loading)
 }
 
+const hideLoading = () => {
+  const loadingElement = document.querySelector('.loading')
+  if (loadingElement) {
+    loadingElement.remove()
+  }
+}
+
+const showError = (message) => {
+  const errorDiv = document.createElement('div')
+  errorDiv.classList.add('error-message')
+  errorDiv.textContent = message
+  app.appendChild(errorDiv)
+}
+
 const loadEvents = async () => {
   showLoading()
   try {
     const events = await api('/events', 'GET', null, token)
-    app.innerHTML = ''
+    hideLoading()
+
+    app.innerHTML = '' // Limpiamos el contenido actual
 
     const header = document.querySelector('header')
-    if (!header) {
-      const newHeader = Header(handleRegister, handleLogin)
-      document.body.prepend(newHeader)
+    if (header) {
+      app.appendChild(header)
     }
 
     events.forEach((event) => {
-      const eventCard = EventCard(event, confirmAttendance, leaveEvent)
+      const eventCard = EventCard(event, confirmAttendance, leaveEvent, !!token)
       app.appendChild(eventCard)
     })
   } catch (error) {
+    hideLoading()
     console.error('Error al cargar eventos:', error)
-    app.innerHTML = '<p>Error al cargar eventos.</p>'
+
+    if (error.message.includes('Token inválido')) {
+      localStorage.removeItem('token') // Elimina el token si es inválido
+      alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
+      window.location.reload() // Recarga la página para volver al estado inicial
+    } else {
+      showError('Error al cargar eventos. Intenta más tarde.')
+    }
   }
 }
 
 const confirmAttendance = async (eventId) => {
-  showLoading()
   try {
     await api(`/events/${eventId}/attend`, 'POST', null, token)
-    alert('Asistencia confirmada.')
-    loadEvents()
+    loadEvents() // Recargar los eventos después de confirmar asistencia
   } catch (error) {
     console.error('Error al confirmar asistencia:', error)
-    alert(error.message)
+    alert('Error al confirmar asistencia. Intenta de nuevo.')
   }
 }
 
 const leaveEvent = async (eventId) => {
-  showLoading()
   try {
     await api(`/events/${eventId}/leave`, 'POST', null, token)
-    alert('Has salido del evento.')
-    loadEvents()
+    loadEvents() // Recargar los eventos después de salir
   } catch (error) {
     console.error('Error al salir del evento:', error)
-    alert(error.message)
+    alert('Error al salir del evento. Intenta de nuevo.')
   }
 }
 
@@ -79,10 +98,8 @@ const initApp = () => {
   const storedToken = localStorage.getItem('token')
   if (storedToken) {
     token = storedToken
-    loadEvents()
-  } else {
-    loadEvents()
   }
+  loadEvents()
 }
 
 initApp()

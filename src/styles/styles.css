@@ -1,6 +1,27 @@
+@import url('../components//EventCard.css');
+
+:root {
+  --primary-color: hsl(46, 84%, 56%);
+  --text-color: hsl(0, 0%, 31%);
+  --bg-color: hsl(0, 0%, 90%);
+  --bg-card-color: hsl(0, 0%, 98%);
+  --border-radius: 0.4em;
+  --transition: color 0.1s, backgraund-color 0.2s ease-in-out;
+}
+* {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: sans-serif;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 header {
@@ -38,4 +59,17 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+img {
+  max-width: 100%;
+  display: block;
+  background-color: aqua;
+}
+.event-card {
+  padding: 1em;
+  background-color: var(--bg-card-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--primary-color);
+  margin-top: 50px;
 }
