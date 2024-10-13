@@ -3,7 +3,7 @@ import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
 
-let token = localStorage.getItem('token') || null
+let token = null // No almacenamos el token en localStorage
 const app = document.getElementById('app')
 
 const showLoading = () => {
@@ -26,13 +26,17 @@ const showError = (message) => {
   app.appendChild(errorDiv)
 }
 
+const isAuthenticated = () => {
+  return !!token // Verificamos si hay un token
+}
+
 const loadEvents = async () => {
   showLoading()
   try {
-    const events = await api('/events', 'GET', null, token)
+    const events = await api('/events', 'GET', null, token) // Usamos el token actual
     hideLoading()
 
-    app.innerHTML = '' // Limpiamos el contenido actual
+    app.innerHTML = ''
 
     const header = document.querySelector('header')
     if (header) {
@@ -40,7 +44,14 @@ const loadEvents = async () => {
     }
 
     events.forEach((event) => {
-      const eventCard = EventCard(event, confirmAttendance, leaveEvent, !!token)
+      const eventCard = EventCard(
+        event,
+        confirmAttendance,
+        leaveEvent,
+        deleteEvent,
+        token,
+        isAuthenticated // Pasamos la función para verificar autenticación
+      )
       app.appendChild(eventCard)
     })
   } catch (error) {
@@ -48,9 +59,9 @@ const loadEvents = async () => {
     console.error('Error al cargar eventos:', error)
 
     if (error.message.includes('Token inválido')) {
-      localStorage.removeItem('token') // Elimina el token si es inválido
+      localStorage.removeItem('token')
       alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
-      window.location.reload() // Recarga la página para volver al estado inicial
+      window.location.reload()
     } else {
       showError('Error al cargar eventos. Intenta más tarde.')
     }
@@ -58,9 +69,13 @@ const loadEvents = async () => {
 }
 
 const confirmAttendance = async (eventId) => {
+  if (!isAuthenticated()) {
+    alert('Debes iniciar sesión para confirmar asistencia.')
+    return
+  }
   try {
     await api(`/events/${eventId}/attend`, 'POST', null, token)
-    loadEvents() // Recargar los eventos después de confirmar asistencia
+    loadEvents()
   } catch (error) {
     console.error('Error al confirmar asistencia:', error)
     alert('Error al confirmar asistencia. Intenta de nuevo.')
@@ -68,23 +83,41 @@ const confirmAttendance = async (eventId) => {
 }
 
 const leaveEvent = async (eventId) => {
+  if (!isAuthenticated()) {
+    alert('Debes iniciar sesión para salir del evento.')
+    return
+  }
   try {
     await api(`/events/${eventId}/leave`, 'POST', null, token)
-    loadEvents() // Recargar los eventos después de salir
+    loadEvents()
   } catch (error) {
     console.error('Error al salir del evento:', error)
     alert('Error al salir del evento. Intenta de nuevo.')
   }
 }
 
+const deleteEvent = async (eventId) => {
+  if (!isAuthenticated()) {
+    alert('Debes iniciar sesión para eliminar el evento.')
+    return
+  }
+  try {
+    await api(`/events/${eventId}`, 'DELETE', null, token)
+    loadEvents()
+  } catch (error) {
+    console.error('Error al eliminar evento:', error)
+    alert('Error al eliminar evento. Intenta de nuevo.')
+  }
+}
+
 const handleRegister = (newToken) => {
-  token = newToken
+  token = newToken // Guardamos el token si se registra
   localStorage.setItem('token', token)
   loadEvents()
 }
 
 const handleLogin = (newToken) => {
-  token = newToken
+  token = newToken // Guardamos el token si se loguea
   localStorage.setItem('token', token)
   loadEvents()
 }
@@ -95,11 +128,8 @@ const initApp = () => {
   const header = Header(handleRegister, handleLogin)
   document.body.prepend(header)
 
-  const storedToken = localStorage.getItem('token')
-  if (storedToken) {
-    token = storedToken
-  }
-  loadEvents()
+  // Eliminamos la lógica de manejo de token al iniciar
+  loadEvents() // Cargar eventos sin usar el token
 }
 
 initApp()
