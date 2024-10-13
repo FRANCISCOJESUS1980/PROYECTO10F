@@ -18,6 +18,11 @@ const LoginForm = (onLogin) => {
       const user = await api('/auth/login', 'POST', { email, password })
       onLogin(user.token)
       form.reset()
+
+      const modal = document.getElementById('loginModal')
+      if (modal) {
+        modal.remove()
+      }
     } catch (error) {
       console.error('Error en el inicio de sesión:', error)
       alert(error.message)

@@ -1,5 +1,6 @@
-export const Modal = (content) => {
+export const Modal = (content, modalId = '') => {
   const modal = document.createElement('div')
+  modal.id = modalId
   modal.style.position = 'fixed'
   modal.style.top = '0'
   modal.style.left = '0'

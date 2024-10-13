@@ -28,6 +28,11 @@ const RegisterForm = (onRegister) => {
       console.log('Registro exitoso:', user)
       onRegister(user.token)
       form.reset()
+
+      const modal = document.getElementById('registerModal')
+      if (modal) {
+        modal.remove()
+      }
     } catch (error) {
       console.error('Error en el registro:', error)
       if (error.message.includes('Usuario ya registrado')) {

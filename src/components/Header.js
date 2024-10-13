@@ -34,13 +34,13 @@ const Header = (handleRegister, handleLogin) => {
 
   headerElement.querySelector('#registerBtn').onclick = () => {
     clearModals()
-    const modal = Modal(RegisterForm(handleRegister))
+    const modal = Modal(RegisterForm(handleRegister), 'registerModal')
     document.body.appendChild(modal)
   }
 
   headerElement.querySelector('#loginBtn').onclick = () => {
     clearModals()
-    const modal = Modal(LoginForm(handleLogin))
+    const modal = Modal(LoginForm(handleLogin), 'loginModal')
     document.body.appendChild(modal)
   }
 
