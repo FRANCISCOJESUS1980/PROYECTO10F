@@ -39,6 +39,8 @@ const RegisterForm = (onRegister) => {
         alert(
           'El usuario ya existe. Por favor, intenta con otro correo o nombre de usuario.'
         )
+      } else if (error.message.includes('password')) {
+        alert('La contraseña debe tener al menos 6 caracteres.')
       } else {
         alert(error.message)
       }

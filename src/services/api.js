@@ -22,11 +22,6 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
   }
 
   try {
-    console.log(
-      `Realizando ${method} a ${API_URL}${endpoint} con cuerpo:`,
-      body
-    )
-
     const response = await fetch(`${API_URL}${endpoint}`, {
       method,
       headers,
@@ -35,12 +30,20 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
 
     if (!response.ok) {
       const errorData = await response.json()
+
+      if (errorData.message && errorData.message.includes('password')) {
+        throw new Error(
+          'La longitud de la contraseña debe tener al menos 6 caracteres.'
+        )
+      }
+
       if (response.status === 401) {
         localStorage.removeItem('token')
         throw new Error(
           'Token inválido o ha expirado. Inicia sesión nuevamente.'
         )
       }
+
       throw new Error(errorData.message || response.statusText)
     }
 

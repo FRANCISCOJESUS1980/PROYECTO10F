@@ -3,7 +3,7 @@ import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
 
-let token = null // No almacenamos el token en localStorage
+let token = localStorage.getItem('token') || null // Recuperar el token al iniciar
 const app = document.getElementById('app')
 
 const showLoading = () => {
@@ -27,13 +27,13 @@ const showError = (message) => {
 }
 
 const isAuthenticated = () => {
-  return !!token // Verificamos si hay un token
+  return !!token
 }
 
 const loadEvents = async () => {
   showLoading()
   try {
-    const events = await api('/events', 'GET', null, token) // Usamos el token actual
+    const events = await api('/events', 'GET', null, token)
     hideLoading()
 
     app.innerHTML = ''
@@ -50,7 +50,7 @@ const loadEvents = async () => {
         leaveEvent,
         deleteEvent,
         token,
-        isAuthenticated // Pasamos la función para verificar autenticación
+        isAuthenticated
       )
       app.appendChild(eventCard)
     })
@@ -58,8 +58,12 @@ const loadEvents = async () => {
     hideLoading()
     console.error('Error al cargar eventos:', error)
 
-    if (error.message.includes('Token inválido')) {
+    if (
+      error.message.includes('Token inválido') ||
+      error.message.includes('ha expirado')
+    ) {
       localStorage.removeItem('token')
+      token = null // Limpiar el token en memoria
       alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
       window.location.reload()
     } else {
@@ -78,7 +82,17 @@ const confirmAttendance = async (eventId) => {
     loadEvents()
   } catch (error) {
     console.error('Error al confirmar asistencia:', error)
-    alert('Error al confirmar asistencia. Intenta de nuevo.')
+    if (
+      error.message.includes('Token inválido') ||
+      error.message.includes('ha expirado')
+    ) {
+      localStorage.removeItem('token')
+      token = null
+      alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
+      window.location.reload()
+    } else {
+      alert('Error al confirmar asistencia. Intenta de nuevo.')
+    }
   }
 }
 
@@ -92,7 +106,17 @@ const leaveEvent = async (eventId) => {
     loadEvents()
   } catch (error) {
     console.error('Error al salir del evento:', error)
-    alert('Error al salir del evento. Intenta de nuevo.')
+    if (
+      error.message.includes('Token inválido') ||
+      error.message.includes('ha expirado')
+    ) {
+      localStorage.removeItem('token')
+      token = null
+      alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
+      window.location.reload()
+    } else {
+      alert('Error al salir del evento. Intenta de nuevo.')
+    }
   }
 }
 
@@ -106,18 +130,28 @@ const deleteEvent = async (eventId) => {
     loadEvents()
   } catch (error) {
     console.error('Error al eliminar evento:', error)
-    alert('Error al eliminar evento. Intenta de nuevo.')
+    if (
+      error.message.includes('Token inválido') ||
+      error.message.includes('ha expirado')
+    ) {
+      localStorage.removeItem('token')
+      token = null
+      alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
+      window.location.reload()
+    } else {
+      alert('Error al eliminar evento. Intenta de nuevo.')
+    }
   }
 }
 
 const handleRegister = (newToken) => {
-  token = newToken // Guardamos el token si se registra
+  token = newToken
   localStorage.setItem('token', token)
   loadEvents()
 }
 
 const handleLogin = (newToken) => {
-  token = newToken // Guardamos el token si se loguea
+  token = newToken
   localStorage.setItem('token', token)
   loadEvents()
 }
@@ -128,8 +162,7 @@ const initApp = () => {
   const header = Header(handleRegister, handleLogin)
   document.body.prepend(header)
 
-  // Eliminamos la lógica de manejo de token al iniciar
-  loadEvents() // Cargar eventos sin usar el token
+  loadEvents()
 }
 
 initApp()

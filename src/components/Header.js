@@ -26,7 +26,7 @@ const Header = (handleRegister, handleLogin) => {
 
   headerElement.innerHTML = `
     <img src="/assets/imagenes/header.jpg" alt="Logo" style="height: 40px;" />
-    <div>
+    <div class= botonheader>
       <button id="registerBtn">Registrarse</button>
       <button id="loginBtn">Iniciar Sesión</button>
     </div>

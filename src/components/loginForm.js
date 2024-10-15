@@ -25,7 +25,17 @@ const LoginForm = (onLogin) => {
       }
     } catch (error) {
       console.error('Error en el inicio de sesión:', error)
-      alert(error.message)
+      if (error.message === 'Failed to fetch') {
+        alert(
+          'Error de conexión. No se pudo conectar con el servidor. Inténtalo más tarde.'
+        )
+      } else if (error.message.includes('Credenciales incorrectas')) {
+        alert(
+          'Las credenciales son incorrectas. Verifica tu correo y contraseña.'
+        )
+      } else {
+        alert(error.message)
+      }
     }
   })
 
