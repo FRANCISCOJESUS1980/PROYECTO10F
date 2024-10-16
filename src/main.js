@@ -3,7 +3,7 @@ import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
 
-let token = localStorage.getItem('token') || null // Recuperar el token al iniciar
+let token = localStorage.getItem('token') || null
 const app = document.getElementById('app')
 
 const showLoading = () => {
@@ -63,7 +63,7 @@ const loadEvents = async () => {
       error.message.includes('ha expirado')
     ) {
       localStorage.removeItem('token')
-      token = null // Limpiar el token en memoria
+      token = null
       alert('Tu sesión ha expirado. Por favor, inicia sesión de nuevo.')
       window.location.reload()
     } else {

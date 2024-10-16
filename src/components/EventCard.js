@@ -15,7 +15,6 @@ const EventCard = (
   let isCreator = false
   let userIsAttending = false
 
-  // Decodificar el token si está presente y válido
   try {
     if (token) {
       const decodedToken = JSON.parse(atob(token.split('.')[1]))
@@ -25,12 +24,10 @@ const EventCard = (
     console.error('Error al decodificar el token:', e)
   }
 
-  // Asegurarse de que el creator no sea undefined
   if (event.creator) {
     isCreator = event.creator.toString() === userId
   }
 
-  // Asegurarse de que attendees sea un array válido
   if (Array.isArray(event.attendees)) {
     userIsAttending = event.attendees.includes(userId)
   }
