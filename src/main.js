@@ -2,6 +2,7 @@ import api from './services/api.js'
 import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
+import { addCreateEventButton } from './components/createEvent.js'
 
 let token = localStorage.getItem('token') || null
 const app = document.getElementById('app')
@@ -38,9 +39,11 @@ const loadEvents = async () => {
 
     app.innerHTML = ''
 
-    const header = document.querySelector('header')
-    if (header) {
-      app.appendChild(header)
+    const header = Header(handleRegister, handleLogin)
+    app.appendChild(header)
+
+    if (isAuthenticated()) {
+      addCreateEventButton()
     }
 
     events.forEach((event) => {

@@ -1,4 +1,5 @@
-@import url('../components//EventCard.css');
+@import url('../components/EventCard.css');
+@import url('../components/createEvent.css');
 
 :root {
   --primary-color: hsl(46, 84%, 56%);

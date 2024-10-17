@@ -31,3 +31,15 @@ export const Modal = (content, modalId = '') => {
 
   return modal
 }
+
+export const openModal = (content, modalId) => {
+  const modal = Modal(content, modalId)
+  document.body.appendChild(modal)
+}
+
+export const closeModal = (modalId) => {
+  const modal = document.getElementById(modalId)
+  if (modal) {
+    modal.remove()
+  }
+}
