@@ -13,7 +13,7 @@ export const Modal = (content, modalId = '') => {
   modal.style.zIndex = '1001'
 
   const modalContent = document.createElement('div')
-  modalContent.style.backgroundColor = 'white'
+  modalContent.style.backgroundColor = 'var(--primary-color)'
   modalContent.style.padding = '20px'
   modalContent.style.borderRadius = '5px'
 

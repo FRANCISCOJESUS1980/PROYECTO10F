@@ -6,8 +6,7 @@ const LoginForm = (onLogin) => {
         <h2>Iniciar Sesión</h2>
         <input type="email" id="email" placeholder="Correo electrónico" required />
         <input type="password" id="password" placeholder="Contraseña" required />
-        <button type="submit">Iniciar Sesión</button>
-    `
+        <button type="submit">Iniciar Sesión</button>`
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault()

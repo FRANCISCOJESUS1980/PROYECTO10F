@@ -8,27 +8,18 @@ const clearModals = () => {
     existingModal.remove()
   }
 }
-
 const Header = (handleRegister, handleLogin) => {
   const headerElement = document.createElement('header')
-  headerElement.style.position = 'fixed'
-  headerElement.style.top = '0'
-  headerElement.style.left = '0'
-  headerElement.style.width = '100%'
-  headerElement.style.height = '60px'
-  headerElement.style.backgroundColor = '#333'
-  headerElement.style.color = 'white'
-  headerElement.style.display = 'flex'
-  headerElement.style.justifyContent = 'space-between'
-  headerElement.style.alignItems = 'center'
-  headerElement.style.padding = '0 20px'
-  headerElement.style.zIndex = '1000'
+  headerElement.className = 'header-container'
 
   headerElement.innerHTML = `
-    <img src="/assets/imagenes/header.jpg" alt="Logo" style="height: 40px;" />
-    <div class= botonheader>
-      <button id="registerBtn">Registrarse</button>
-      <button id="loginBtn">Iniciar Sesión</button>
+    <div class="header-left">
+      <h1 class="header-title">EVENTOS</h1>
+    </div>
+    <img src="/assets/imagenes/posible header.avif" alt="Logo" class="header-image" />
+    <div class="button-container">
+      <button id="registerBtn" class="header-button">Registrarse</button>
+      <button id="loginBtn" class="header-button">Iniciar Sesión</button>
     </div>
   `
 
