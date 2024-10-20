@@ -1,4 +1,5 @@
-import { openModal } from './Modal.js'
+import { openModal, closeModal } from './Modal.js'
+import { EventCard } from './EventCard.js'
 
 async function handleCreateEvent(e) {
   e.preventDefault()
@@ -16,18 +17,34 @@ async function handleCreateEvent(e) {
   formData.append('description', description)
   formData.append('image', image)
 
+  const submitButton = document.querySelector('button[type="submit"]')
+  submitButton.disabled = true
+  submitButton.textContent = 'Creando...'
+
   try {
-    const response = await fetch('/events', {
+    const response = await fetch('http://localhost:3000/api/events', {
       method: 'POST',
       body: formData,
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
       }
     })
-    console.log(response)
+
     if (!response.ok) {
-      const errorMessage = await response.text()
-      throw new Error(errorMessage)
+      const contentType = response.headers.get('content-type')
+      if (contentType && contentType.includes('text/html')) {
+        throw new Error('El servidor devolvió un error HTML en lugar de JSON.')
+      }
+
+      const errorMessage = await response.json()
+      if (
+        errorMessage.message ===
+        'Ya existe un evento con el mismo título, fecha y ubicación.'
+      ) {
+        alert(errorMessage.message)
+        return
+      }
+      throw new Error(errorMessage.message || 'Error al crear el evento.')
     }
 
     closeModal('eventModal')
@@ -36,6 +53,9 @@ async function handleCreateEvent(e) {
   } catch (error) {
     console.error('Error al crear el evento:', error)
     alert('Error al crear el evento: ' + error.message)
+  } finally {
+    submitButton.disabled = false
+    submitButton.textContent = 'Crear Evento'
   }
 }
 
@@ -64,6 +84,7 @@ export function openCreateEventModal() {
 
   openModal(modalContent, 'eventModal')
 }
+
 export function addCreateEventButton() {
   let existingButton = document.querySelector('.create-event-btn')
   if (existingButton) {
@@ -96,7 +117,7 @@ export function addCreateEventButton() {
 async function loadEvents() {
   showLoading()
   try {
-    const response = await fetch('/api/events', {
+    const response = await fetch('http://localhost:3000/api/events', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -110,26 +131,60 @@ async function loadEvents() {
     const events = await response.json()
     hideLoading()
 
+    const app = document.getElementById('app')
     app.innerHTML = ''
 
     events.forEach((event) => {
       const eventCard = EventCard(
         event,
         confirmAttendance,
-        leaveEvent,
-        deleteEvent,
-        token,
-        isAuthenticated
+
+        localStorage.getItem('token')
       )
       app.appendChild(eventCard)
     })
-
-    if (isAuthenticated()) {
-      addCreateEventButton()
-    }
   } catch (error) {
     hideLoading()
     console.error('Error al cargar eventos:', error)
     alert('Error al cargar eventos: ' + error.message)
+  }
+}
+
+function showLoading() {
+  const loadingElement = document.createElement('div')
+  loadingElement.id = 'loading'
+  loadingElement.textContent = 'Cargando...'
+  document.body.appendChild(loadingElement)
+}
+
+function hideLoading() {
+  const loadingElement = document.getElementById('loading')
+  if (loadingElement) {
+    document.body.removeChild(loadingElement)
+  }
+}
+
+async function confirmAttendance(eventId) {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/api/events/${eventId}/attend`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error('Error al confirmar asistencia')
+    }
+
+    alert('Asistencia confirmada con éxito')
+    loadEvents()
+  } catch (error) {
+    console.error('Error al confirmar asistencia:', error)
+    alert('Error al confirmar asistencia: ' + error.message)
   }
 }

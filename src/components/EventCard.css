@@ -12,7 +12,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   flex-wrap: wrap;
-  margin-top: 50px;
+  margin-top: 130px;
 }
 .event-card:hover {
   transform: scale3d(3);
@@ -25,8 +25,8 @@
 
 .event-buttons {
   margin-bottom: 5px;
-  width: 90%;
   align-self: center;
+  width: 90%;
 }
 
 .event-buttons button {
