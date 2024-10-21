@@ -33,7 +33,7 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
 
       if (errorData.message && errorData.message.includes('password')) {
         throw new Error(
-          'La longitud de la contraseña debe tener al menos 6 caracteres.'
+          'La longitud de la contraseña debe tener al menos 8 caracteres.'
         )
       }
 
@@ -41,6 +41,11 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
         localStorage.removeItem('token')
         throw new Error(
           'Token inválido o ha expirado. Inicia sesión nuevamente.'
+        )
+      }
+      if (errorData.message && errorData.message.includes('username')) {
+        throw new Error(
+          'El nombre de usuario debe tener al menos 3 caracteres.'
         )
       }
 
