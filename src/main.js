@@ -162,7 +162,7 @@ const handleLogin = (newToken) => {
 const initApp = () => {
   app.innerHTML = ''
 
-  const header = Header(handleRegister, handleLogin)
+  const header = Header(handleRegister, handleLogin, isAuthenticated)
   document.body.prepend(header)
 
   loadEvents()
