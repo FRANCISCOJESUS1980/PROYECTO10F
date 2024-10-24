@@ -27,7 +27,7 @@ const showError = (message) => {
   app.appendChild(errorDiv)
 }
 
-const isAuthenticated = () => {
+export const isAuthenticated = () => {
   return !!token
 }
 
@@ -44,6 +44,10 @@ const loadEvents = async () => {
 
     if (isAuthenticated()) {
       addCreateEventButton()
+      const buttonContainer = document.querySelector('div .button-container')
+      if (buttonContainer) {
+        buttonContainer.remove()
+      }
     }
 
     events.forEach((event) => {
@@ -76,6 +80,7 @@ const loadEvents = async () => {
 }
 
 const confirmAttendance = async (eventId) => {
+  showLoading()
   if (!isAuthenticated()) {
     alert('Debes iniciar sesión para confirmar asistencia.')
     return
@@ -84,6 +89,7 @@ const confirmAttendance = async (eventId) => {
     await api(`/events/${eventId}/attend`, 'POST', null, token)
     loadEvents()
   } catch (error) {
+    hideLoading()
     console.error('Error al confirmar asistencia:', error)
     if (
       error.message.includes('Token inválido') ||
@@ -100,6 +106,7 @@ const confirmAttendance = async (eventId) => {
 }
 
 const leaveEvent = async (eventId) => {
+  showLoading()
   if (!isAuthenticated()) {
     alert('Debes iniciar sesión para salir del evento.')
     return
@@ -108,6 +115,7 @@ const leaveEvent = async (eventId) => {
     await api(`/events/${eventId}/leave`, 'POST', null, token)
     loadEvents()
   } catch (error) {
+    hideLoading()
     console.error('Error al salir del evento:', error)
     if (
       error.message.includes('Token inválido') ||
@@ -124,14 +132,17 @@ const leaveEvent = async (eventId) => {
 }
 
 const deleteEvent = async (eventId) => {
+  showLoading()
   if (!isAuthenticated()) {
     alert('Debes iniciar sesión para eliminar el evento.')
+    hideLoading()
     return
   }
   try {
     await api(`/events/${eventId}`, 'DELETE', null, token)
     loadEvents()
   } catch (error) {
+    hideLoading()
     console.error('Error al eliminar evento:', error)
     if (
       error.message.includes('Token inválido') ||

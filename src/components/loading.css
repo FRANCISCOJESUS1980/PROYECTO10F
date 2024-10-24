@@ -3,12 +3,18 @@
   font-size: 24px;
   background-color: rgba(0, 0, 0, 0.7);
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 50%;
+  left: 50%;
   width: 100vw;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
+}
+.error-message {
+  color: red;
+  font-size: 18px;
+  margin: 20px;
+  animation-duration: 4s;
 }
