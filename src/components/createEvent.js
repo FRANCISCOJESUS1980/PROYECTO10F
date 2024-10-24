@@ -1,5 +1,6 @@
 import { openModal, closeModal } from './Modal.js'
 import { EventCard } from './EventCard.js'
+//import { isAuthenticated } from '../main.js'
 
 async function handleCreateEvent(e) {
   e.preventDefault()
@@ -52,7 +53,9 @@ async function handleCreateEvent(e) {
     loadEvents()
   } catch (error) {
     console.error('Error al crear el evento:', error)
-    alert('Error al crear el evento: ' + error.message)
+    alert(
+      'Error al crear el evento: el titulo debe tener al menos 3 caracteres'
+    )
   } finally {
     submitButton.disabled = false
     submitButton.textContent = 'Crear Evento'
@@ -138,7 +141,6 @@ async function loadEvents() {
       const eventCard = EventCard(
         event,
         confirmAttendance,
-
         localStorage.getItem('token')
       )
       app.appendChild(eventCard)

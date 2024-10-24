@@ -3,7 +3,10 @@ import Header from './components/Header.js'
 import { Loading } from './components/loading.js'
 import { EventCard } from './components/EventCard.js'
 import { addCreateEventButton } from './components/createEvent.js'
+import { createBall } from './components/crearBolas/createball.js'
 
+const newBall = createBall()
+document.body.appendChild(newBall)
 let token = localStorage.getItem('token') || null
 const app = document.getElementById('app')
 
