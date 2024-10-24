@@ -42,11 +42,6 @@ input {
   box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
   margin-top: 10px;
 }
-#closeModal {
-  top: 0;
-  left: 0;
-  width: 95%;
-}
 
 button {
   color: white;
