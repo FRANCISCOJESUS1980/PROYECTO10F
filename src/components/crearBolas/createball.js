@@ -26,8 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  generateInitialBalls()
-
   window.addEventListener('scroll', () => {
     generateBallsOnScroll()
   })

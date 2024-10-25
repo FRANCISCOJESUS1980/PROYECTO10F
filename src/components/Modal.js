@@ -5,7 +5,7 @@ export const Modal = (content, modalId = '') => {
   modal.style.top = '20%'
   modal.style.left = '20%'
   modal.style.width = '50%'
-  modal.style.height = '46%'
+  modal.style.height = '28%'
   modal.style.backgroundColor = 'rgba(0, 0, 0, 0.7)'
   modal.style.display = 'flex'
   modal.style.alignItems = 'center'
@@ -20,7 +20,7 @@ export const Modal = (content, modalId = '') => {
   modalContent.appendChild(content)
 
   const closeModalButton = document.createElement('button')
-  // closeModalButton.id = 'closeModal'
+  //closeModalButton.id = 'closeModal'
   closeModalButton.className = 'button'
   closeModalButton.textContent = 'Cerrar'
   closeModalButton.onclick = () => {

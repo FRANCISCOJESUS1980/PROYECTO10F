@@ -27,7 +27,7 @@ const EventCard = (
 
   if (event.creator) {
     console.log('Event creator ID:', event.creator)
-    isCreator = event.creator.toString() === userId.toString()
+    isCreator = event.creator.toString() === userId
     console.log('isCreator:', isCreator)
   }
 
