@@ -1,11 +1,10 @@
 .event-card {
   width: 300px;
-  border: 1px solid var(--secundary-color);
   border-radius: 8px;
-  box-shadow: 0 0 6px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 4px 6px var(--secundary-color);
   overflow: hidden;
   margin: 16px;
-  background-color: rgb(211, 236, 232);
+  background-color: var(--primary-color);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -19,7 +18,7 @@
 }
 
 .event-card.expanded {
-  background-color: var(--primary-color);
+  background-color: rgb(250, 250, 228);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -36,7 +35,7 @@
 
 .event-image {
   width: 100%;
-  height: 150px;
+  height: 250px;
   object-fit: cover;
 }
 

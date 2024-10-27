@@ -1,10 +1,10 @@
 .loading {
   color: white;
   font-size: 24px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: var(--secundary-color);
   position: fixed;
-  top: 50%;
-  left: 50%;
+  top: 0;
+  left: 0;
   width: 100vw;
   height: 100vh;
   display: flex;

@@ -40,7 +40,8 @@
 .ball {
   position: absolute;
   border-radius: 50%;
-  background-color: rgba(230, 106, 11, 0.7);
+  background-color: rgba(245, 182, 10, 0.205);
+  /* background-color: rgba(230, 106, 11, 0.7);*/
   animation: bounce 5s infinite;
   opacity: 0.2;
 }

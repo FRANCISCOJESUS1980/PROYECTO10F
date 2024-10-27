@@ -1,5 +1,43 @@
-import { openModal, closeModal } from '../Modal.js'
+import { openModal, closeModal } from '../utils/Modal.js'
 import { EventCard } from '../tarjetaEventos/EventCard.js'
+
+async function loadEvents() {
+  showLoading()
+  try {
+    const response = await fetch('http://localhost:3000/api/events', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error('Error al cargar eventos')
+    }
+
+    const events = await response.json()
+    hideLoading()
+
+    const app = document.getElementById('app')
+    app.innerHTML = ''
+
+    events.forEach((event) => {
+      const eventCard = EventCard(
+        event,
+        confirmAttendance,
+        leaveEvent,
+        deleteEvent,
+        token,
+        isAuthenticated
+      )
+      app.appendChild(eventCard)
+    })
+  } catch (error) {
+    hideLoading()
+    console.error('Error al cargar eventos:', error)
+    alert('Error al cargar eventos: ' + error.message)
+  }
+}
 
 async function handleCreateEvent(e) {
   e.preventDefault()
@@ -10,9 +48,18 @@ async function handleCreateEvent(e) {
   const description = document.getElementById('description').value
   const image = document.getElementById('image').files[0]
 
-  // Validación de longitud del título en el frontend
-  if (title.length < 3) {
-    alert('El título debe tener al menos 3 caracteres.')
+  if (title.length < 3 || title.length > 16) {
+    alert('El título debe tener entre 3 y 16 caracteres.')
+    return
+  }
+
+  if (location.length > 14) {
+    alert('La ubicación no debe superar los 14 caracteres.')
+    return
+  }
+
+  if (description.length > 20) {
+    alert('La descripción no debe superar los 20 caracteres.')
     return
   }
 
@@ -48,10 +95,12 @@ async function handleCreateEvent(e) {
     }
 
     closeModal('eventModal')
+
     loadEvents()
   } catch (error) {
     console.error('Error al crear el evento:', error)
     alert(`Error al crear el evento: ${error.message}`)
+    location.reload()
   } finally {
     submitButton.disabled = false
     submitButton.textContent = 'Crear Evento'
@@ -111,44 +160,6 @@ export function addCreateEventButton() {
   }
 
   eventContainer.appendChild(button)
-}
-
-async function loadEvents() {
-  showLoading()
-  try {
-    const response = await fetch('http://localhost:3000/api/events', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al cargar eventos')
-    }
-
-    const events = await response.json()
-    hideLoading()
-
-    const app = document.getElementById('app')
-    app.innerHTML = ''
-
-    events.forEach((event) => {
-      const eventCard = EventCard(
-        event,
-        confirmAttendance,
-        leaveEvent,
-        deleteEvent,
-        token,
-        isAuthenticated
-      )
-      app.appendChild(eventCard)
-    })
-  } catch (error) {
-    hideLoading()
-    console.error('Error al cargar eventos:', error)
-    alert('Error al cargar eventos: ' + error.message)
-  }
 }
 
 function showLoading() {

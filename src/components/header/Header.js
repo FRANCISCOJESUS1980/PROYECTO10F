@@ -1,6 +1,6 @@
-import RegisterForm from '../RegisterForm.js'
+import RegisterForm from '../utils/RegisterForm.js'
 import LoginForm from '../Loginform/loginForm.js'
-import { Modal } from '../Modal.js'
+import { Modal } from '../utils/Modal.js'
 
 const clearModals = () => {
   const existingModal = document.querySelector('.modal')
@@ -16,7 +16,7 @@ const Header = (handleRegister, handleLogin) => {
     <div class="header-left">
       <h1 class="header-title">EVENTOS</h1>
     </div>
-    <img src="/assets/imagenes/posible header.avif" alt="Logo" class="header-image" />
+    <img src="/assets/imagenes/header3.avif" alt="Logo" class="header-image" />
     <div class="button-container">
       <button id="registerBtn" class="header-button">Registrarse</button>
       <button id="loginBtn" class="header-button">Iniciar Sesión</button>
