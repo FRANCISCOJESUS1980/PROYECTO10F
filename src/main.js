@@ -1,8 +1,8 @@
 import api from './services/api.js'
-import Header from './components/Header.js'
-import { Loading } from './components/loading.js'
+import Header from './components/header/Header.js'
+import { Loading } from './components/Loading/loading.js'
 
-import { EventCard } from './components/EventCard.js'
+import { EventCard } from './components/tarjetaEventos/EventCard.js'
 import { addCreateEventButton } from './components/crearEventos/createEvent.js'
 import { createBall } from './components/crearBolas/createball.js'
 

@@ -1,5 +1,5 @@
 import { openModal, closeModal } from '../Modal.js'
-import { EventCard } from '../EventCard.js'
+import { EventCard } from '../tarjetaEventos/EventCard.js'
 
 async function handleCreateEvent(e) {
   e.preventDefault()

@@ -1,6 +1,6 @@
-import RegisterForm from './RegisterForm.js'
-import LoginForm from './loginForm.js'
-import { Modal } from './Modal.js'
+import RegisterForm from '../RegisterForm.js'
+import LoginForm from '../Loginform/loginForm.js'
+import { Modal } from '../Modal.js'
 
 const clearModals = () => {
   const existingModal = document.querySelector('.modal')
