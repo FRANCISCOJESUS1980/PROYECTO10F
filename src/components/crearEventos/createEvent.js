@@ -1,17 +1,22 @@
-import { openModal, closeModal } from './Modal.js'
-import { EventCard } from './EventCard.js'
-//import { isAuthenticated } from '../main.js'
+import { openModal, closeModal } from '../Modal.js'
+import { EventCard } from '../EventCard.js'
 
 async function handleCreateEvent(e) {
   e.preventDefault()
 
-  const formData = new FormData()
   const title = document.getElementById('title').value
   const date = document.getElementById('date').value
   const location = document.getElementById('location').value
   const description = document.getElementById('description').value
   const image = document.getElementById('image').files[0]
 
+  // Validación de longitud del título en el frontend
+  if (title.length < 3) {
+    alert('El título debe tener al menos 3 caracteres.')
+    return
+  }
+
+  const formData = new FormData()
   formData.append('title', title)
   formData.append('date', date)
   formData.append('location', location)
@@ -33,29 +38,20 @@ async function handleCreateEvent(e) {
 
     if (!response.ok) {
       const contentType = response.headers.get('content-type')
-      if (contentType && contentType.includes('text/html')) {
-        throw new Error('El servidor devolvió un error HTML en lugar de JSON.')
-      }
-
-      const errorMessage = await response.json()
-      if (
-        errorMessage.message ===
-        'Ya existe un evento con el mismo título, fecha y ubicación.'
-      ) {
+      if (contentType && contentType.includes('application/json')) {
+        const errorMessage = await response.json()
         alert(errorMessage.message)
-        return
+      } else {
+        throw new Error('El servidor devolvió un error inesperado.')
       }
-      throw new Error(errorMessage.message || 'Error al crear el evento.')
+      return
     }
 
     closeModal('eventModal')
-
     loadEvents()
   } catch (error) {
     console.error('Error al crear el evento:', error)
-    alert(
-      'Error al crear el evento: el titulo debe tener al menos 3 caracteres'
-    )
+    alert(`Error al crear el evento: ${error.message}`)
   } finally {
     submitButton.disabled = false
     submitButton.textContent = 'Crear Evento'
@@ -141,7 +137,10 @@ async function loadEvents() {
       const eventCard = EventCard(
         event,
         confirmAttendance,
-        localStorage.getItem('token')
+        leaveEvent,
+        deleteEvent,
+        token,
+        isAuthenticated
       )
       app.appendChild(eventCard)
     })
