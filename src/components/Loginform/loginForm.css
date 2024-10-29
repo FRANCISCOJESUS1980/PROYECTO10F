@@ -59,6 +59,7 @@ button:hover {
   box-shadow: none;
   background-color: rgba(0, 0, 0, 0.8);
 }
-#loginModal {
-  background-color: aqua;
+h2 {
+  color: white;
+  margin-left: 30%;
 }

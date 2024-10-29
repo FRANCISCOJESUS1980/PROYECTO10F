@@ -1,4 +1,5 @@
 import api from '../../services/api.js'
+import Swal from 'sweetalert2'
 
 const LoginForm = (onLogin) => {
   const form = document.createElement('form')
@@ -22,19 +23,24 @@ const LoginForm = (onLogin) => {
       if (modal) {
         modal.remove()
       }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Inicio de sesión exitoso',
+        text: 'Bienvenido de nuevo',
+        timer: 2000,
+        showConfirmButton: false
+      })
     } catch (error) {
       console.error('Error en el inicio de sesión:', error)
-      if (error.message === 'Failed to fetch') {
-        alert(
-          'Error de conexión. No se pudo conectar con el servidor. Inténtalo más tarde.'
-        )
-      } else if (error.message.includes('Credenciales incorrectas')) {
-        alert(
-          'Las credenciales son incorrectas. Verifica tu correo y contraseña.'
-        )
-      } else {
-        alert(error.message)
-      }
+
+      const errorMessage = error.message || 'Error en el inicio de sesión'
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: errorMessage
+      })
     }
   })
 

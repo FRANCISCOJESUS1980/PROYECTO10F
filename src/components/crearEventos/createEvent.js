@@ -1,43 +1,7 @@
 import { openModal, closeModal } from '../utils/Modal.js'
-import { EventCard } from '../tarjetaEventos/EventCard.js'
-
-async function loadEvents() {
-  showLoading()
-  try {
-    const response = await fetch('http://localhost:3000/api/events', {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
-      }
-    })
-
-    if (!response.ok) {
-      throw new Error('Error al cargar eventos')
-    }
-
-    const events = await response.json()
-    hideLoading()
-
-    const app = document.getElementById('app')
-    app.innerHTML = ''
-
-    events.forEach((event) => {
-      const eventCard = EventCard(
-        event,
-        confirmAttendance,
-        leaveEvent,
-        deleteEvent,
-        token,
-        isAuthenticated
-      )
-      app.appendChild(eventCard)
-    })
-  } catch (error) {
-    hideLoading()
-    console.error('Error al cargar eventos:', error)
-    alert('Error al cargar eventos: ' + error.message)
-  }
-}
+//import { EventCard } from '../tarjetaEventos/EventCard.js'
+import Swal from 'sweetalert2'
+import { loadEvents } from '../../main.js'
 
 async function handleCreateEvent(e) {
   e.preventDefault()
@@ -49,17 +13,32 @@ async function handleCreateEvent(e) {
   const image = document.getElementById('image').files[0]
 
   if (title.length < 3 || title.length > 16) {
-    alert('El título debe tener entre 3 y 16 caracteres.')
+    Swal.fire({
+      icon: 'warning',
+      title: 'Título inválido',
+      text: 'El título debe tener entre 3 y 16 caracteres.',
+      confirmButtonText: 'Corregir'
+    })
     return
   }
 
   if (location.length > 14) {
-    alert('La ubicación no debe superar los 14 caracteres.')
+    Swal.fire({
+      icon: 'warning',
+      title: 'Ubicación inválida',
+      text: 'La ubicación no debe superar los 14 caracteres.',
+      confirmButtonText: 'Corregir'
+    })
     return
   }
 
   if (description.length > 20) {
-    alert('La descripción no debe superar los 20 caracteres.')
+    Swal.fire({
+      icon: 'warning',
+      title: 'Descripción inválida',
+      text: 'La descripción no debe superar los 20 caracteres.',
+      confirmButtonText: 'Corregir'
+    })
     return
   }
 
@@ -87,116 +66,39 @@ async function handleCreateEvent(e) {
       const contentType = response.headers.get('content-type')
       if (contentType && contentType.includes('application/json')) {
         const errorMessage = await response.json()
-        alert(errorMessage.message)
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el servidor',
+          text: errorMessage.message,
+          confirmButtonText: 'OK'
+        })
       } else {
         throw new Error('El servidor devolvió un error inesperado.')
       }
       return
     }
 
-    closeModal('eventModal')
+    Swal.fire({
+      icon: 'success',
+      title: 'Evento creado',
+      text: 'El evento se ha creado exitosamente.',
+      confirmButtonText: 'Aceptar'
+    })
 
+    closeModal('eventModal')
     loadEvents()
   } catch (error) {
     console.error('Error al crear el evento:', error)
-    alert(`Error al crear el evento: ${error.message}`)
-    location.reload()
+    Swal.fire({
+      icon: 'error',
+      title: 'Error al crear el evento',
+      text: error.message,
+      confirmButtonText: 'Intentar de nuevo'
+    })
   } finally {
     submitButton.disabled = false
     submitButton.textContent = 'Crear Evento'
   }
 }
 
-export function openCreateEventModal() {
-  const modalContent = document.createElement('div')
-  modalContent.innerHTML = `
-    <h2>Crear Evento</h2>
-    <form id="create-event-form">
-      <label for="title">Título:</label>
-      <input type="text" id="title" required>
-      <label for="date">Fecha:</label>
-      <input type="date" id="date" required>
-      <label for="location">Ubicación:</label>
-      <input type="text" id="location" required>
-      <label for="description">Descripción:</label>
-      <textarea id="description" required></textarea>
-      <label for="image">Imagen:</label>
-      <input type="file" id="image" accept="image/*" required>
-      <button type="submit">Crear Evento</button>
-    </form>
-  `
-
-  modalContent
-    .querySelector('#create-event-form')
-    .addEventListener('submit', handleCreateEvent)
-
-  openModal(modalContent, 'eventModal')
-}
-
-export function addCreateEventButton() {
-  let existingButton = document.querySelector('.create-event-btn')
-  if (existingButton) {
-    return
-  }
-
-  const button = document.createElement('button')
-  button.textContent = 'Crear Evento'
-  button.className = 'create-event-btn'
-  button.addEventListener('click', openCreateEventModal)
-
-  let eventContainer = document.getElementById('event-container')
-
-  if (!eventContainer) {
-    eventContainer = document.createElement('div')
-    eventContainer.id = 'event-container'
-    eventContainer.style.display = 'flex'
-    eventContainer.style.justifyContent = 'center'
-    eventContainer.style.alignItems = 'center'
-    eventContainer.style.marginTop = '80px'
-    eventContainer.style.minHeight = '100px'
-
-    const header = document.querySelector('header')
-    header.insertAdjacentElement('afterend', eventContainer)
-  }
-
-  eventContainer.appendChild(button)
-}
-
-function showLoading() {
-  const loadingElement = document.createElement('div')
-  loadingElement.id = 'loading'
-  loadingElement.textContent = 'Cargando...'
-  document.body.appendChild(loadingElement)
-}
-
-function hideLoading() {
-  const loadingElement = document.getElementById('loading')
-  if (loadingElement) {
-    document.body.removeChild(loadingElement)
-  }
-}
-
-async function confirmAttendance(eventId) {
-  try {
-    const response = await fetch(
-      `http://localhost:3000/api/events/${eventId}/attend`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error('Error al confirmar asistencia')
-    }
-
-    alert('Asistencia confirmada con éxito')
-    loadEvents()
-  } catch (error) {
-    console.error('Error al confirmar asistencia:', error)
-    alert('Error al confirmar asistencia: ' + error.message)
-  }
-}
+export default handleCreateEvent
