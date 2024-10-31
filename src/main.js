@@ -101,6 +101,11 @@ const confirmAttendance = async (eventId) => {
   }
   try {
     await api(`/events/${eventId}/attend`, 'POST', null, token)
+    Swal.fire({
+      icon: 'success',
+      title: 'confirmar Asistencia',
+      text: 'Has confirmado Asistencia con exito'
+    })
     loadEvents()
   } catch (error) {
     hideLoading()
@@ -141,6 +146,11 @@ const leaveEvent = async (eventId) => {
   }
   try {
     await api(`/events/${eventId}/leave`, 'POST', null, token)
+    Swal.fire({
+      icon: 'success',
+      title: 'Salir de evento',
+      text: 'has salido con exito del evento'
+    })
     loadEvents()
   } catch (error) {
     hideLoading()
@@ -181,6 +191,11 @@ const deleteEvent = async (eventId) => {
   }
   try {
     await api(`/events/${eventId}`, 'DELETE', null, token)
+    Swal.fire({
+      icon: 'success',
+      title: 'Eliminar Evento',
+      text: 'El evento ha sido eliminado con exito'
+    })
     loadEvents()
   } catch (error) {
     hideLoading()

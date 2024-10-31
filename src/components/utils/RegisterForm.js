@@ -1,4 +1,5 @@
 import api from '../../services/api'
+import Swal from 'sweetalert2'
 
 const RegisterForm = (onRegister) => {
   const form = document.createElement('form')
@@ -33,17 +34,33 @@ const RegisterForm = (onRegister) => {
       if (modal) {
         modal.remove()
       }
+
+      Swal.fire({
+        title: 'Registro exitoso!',
+        text: 'Bienvenido a nuestra plataforma.',
+        icon: 'success',
+        confirmButtonText: 'Aceptar'
+      })
     } catch (error) {
       console.error('Error en el registro:', error)
+
+      let errorMessage = 'Ocurrió un error.'
+
       if (error.message.includes('Usuario ya registrado')) {
-        alert(
+        errorMessage =
           'El usuario ya existe. Por favor, intenta con otro correo o nombre de usuario.'
-        )
       } else if (error.message.includes('password')) {
-        alert('La contraseña debe tener al menos 8 caracteres.')
+        errorMessage = 'La contraseña debe tener al menos 8 caracteres.'
       } else {
-        alert(error.message)
+        errorMessage = error.message
       }
+
+      Swal.fire({
+        title: 'Error!',
+        text: errorMessage,
+        icon: 'error',
+        confirmButtonText: 'Aceptar'
+      })
     }
   })
 
