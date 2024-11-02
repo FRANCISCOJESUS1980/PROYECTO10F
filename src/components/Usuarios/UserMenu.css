@@ -1,0 +1,73 @@
+/* Estilo para el contenedor del menú */
+.menu-container {
+  position: fixed;
+  top: 180px;
+  right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Estilo para el ícono del menú */
+.menu-icon {
+  font-size: 26px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--secundary-color);
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.menu-icon:hover {
+  background-color: white;
+}
+
+/* Estilo para el menú desplegable */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 15px;
+  z-index: 1000;
+  width: 160px;
+}
+
+/* Estilo para los botones dentro del menú */
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: var(--secundary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.dropdown-menu button:hover {
+  background-color: #0056b3;
+}
+
+/* Estilo de transición para que el menú aparezca suavemente */
+.dropdown-menu {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Clase para mostrar el menú con efecto */
+.dropdown-menu.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}

@@ -5,6 +5,7 @@ import Swal from 'sweetalert2'
 import { EventCard } from './components/tarjetaEventos/EventCard.js'
 import addCreateEventButton from './components/crearEventos/openCreateEventButton'
 import { createBall } from './components/crearBolas/createball.js'
+import { createUserMenu } from './components/Usuarios/UserMenu.js'
 
 const newBall = createBall()
 document.body.appendChild(newBall)
@@ -48,6 +49,8 @@ export const loadEvents = async () => {
 
     if (isAuthenticated()) {
       addCreateEventButton()
+      const removeMenu = createUserMenu()
+
       const buttonContainer = document.querySelector('div .button-container')
       if (buttonContainer) {
         buttonContainer.remove()
@@ -245,4 +248,4 @@ const initApp = () => {
 }
 
 initApp()
-export default loadEvents
+//export default loadEvents
