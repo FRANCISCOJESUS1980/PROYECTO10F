@@ -1,5 +1,6 @@
 import Swal from 'sweetalert2'
 import { loadEvents } from '../../main.js'
+import { closeModal } from '../utils/Modal.js'
 
 async function handleUpdateEvent(eventId) {
   const title = document.getElementById('title').value
@@ -76,6 +77,7 @@ async function handleUpdateEvent(eventId) {
     })
 
     loadEvents()
+    closeModal('handleUpdateEvent')
   } catch (error) {
     console.error('Error al actualizar el evento:', error)
     Swal.fire({
