@@ -48,7 +48,9 @@ const api = async (endpoint, method = 'GET', body = null, token = null) => {
           'El nombre de usuario debe tener al menos 3 caracteres.'
         )
       }
-
+      if (errorData.message && errorData.message.includes('email')) {
+        throw new Error('El email debe ser valido')
+      }
       throw new Error(errorData.message || response.statusText)
     }
 

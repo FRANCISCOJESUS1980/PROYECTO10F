@@ -248,4 +248,3 @@ const initApp = () => {
 }
 
 initApp()
-//export default loadEvents
