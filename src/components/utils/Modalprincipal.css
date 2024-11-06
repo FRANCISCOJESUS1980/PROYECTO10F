@@ -1,0 +1,84 @@
+#toggle-button {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  background-color: var(--secundary-color);
+  border: none;
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px 0 0 5px;
+}
+#toggle-button:hover {
+  background-color: rgb(130, 126, 126);
+}
+
+#toggle-button.hidden {
+  transform: translateY(-50%) translateX(100%);
+}
+
+#modal-wrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+}
+
+#modal-wrapper.open {
+  visibility: visible;
+  opacity: 1;
+}
+
+#modal-container {
+  width: 250px;
+  height: 100%;
+  background-color: rgb(2 6 23);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#modal-wrapper.open #modal-container {
+  transform: translateX(0);
+}
+
+#modal-container button {
+  background: var(--secundary-color);
+  border: none;
+  color: white;
+  font-size: 22px;
+  height: auto;
+  text-align: center;
+  padding: 15px 0;
+  cursor: pointer;
+
+  transition: background-color 0.3s ease;
+}
+
+#modal-container button:first-child {
+  margin-top: 20px;
+}
+
+#modal-container button:hover {
+  background-color: rgba(124, 122, 122, 0.8);
+}

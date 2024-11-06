@@ -6,6 +6,9 @@ import { EventCard } from './components/tarjetaEventos/EventCard.js'
 import addCreateEventButton from './components/crearEventos/openCreateEventButton'
 import { createBall } from './components/crearBolas/createball.js'
 import { createUserMenu } from './components/Usuarios/UserMenu.js'
+import { crearModal } from './components/utils/Modalprincipal.js'
+
+crearModal()
 
 const newBall = createBall()
 document.body.appendChild(newBall)
